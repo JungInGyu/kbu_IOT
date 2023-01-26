@@ -4,7 +4,9 @@ from datetime import datetime
 from influxdb import InfluxDBClient
 import schedule
 import time
-import numpy as np
+# import numpy as np
+
+
 def get_influxdb(database_name, host='localhost', port=8086):
     client = InfluxDBClient(host, port)
     try:
@@ -47,36 +49,20 @@ def humin_scale():
   global humin_value
   humin_value = str(humi_min.get())
 
-def count():
-    global temp_val
-    temp_val = np.array([1.0,2.0,3.0,4.0,5.0], dtype=float)
-    global count
-    count =0
-    while True:
-        count = count +1
-        if count >= 6 :
-            count = 0
+# def count():
+#     global temp_val
+#     temp_val = np.array([1.0,2.0,3.0,4.0,5.0], dtype=float)
+#     global count
+#     count =0
+#     while True:
+#         count = count +1
+#         if count >= 6 :
+#             count = 0
+# # temp_val[count]
+# def while_schedule():
+#         count()
 
 
-def while_schedule():
-        count()
-client = get_influxdb(database_name='ig_test333', host='34.64.88.253', port=8086)
-client.get_list_database()
-client.get_list_measurements
-points = [{'measurement':'temp', 
-     'tags':{'server_id': 'server1'}, 
-     'fields':{'temp': temp_val[count] ,'humi': 9},
-     'time': datetime.utcnow().strftime("%Y/%m/%d %H:%M:%S")}] # 한국현재시간
-client.write_points(points=points, protocol='json')
-rs = client.query("""
-    SELECT max(v) as cnt_v
-    FROM temp 
-    WHERE time >= now() - 12h GROUP BY time(3h)
-    """)
-for point in rs.get_points():
-        print(point)
-
-schedule.every(5).seconds.do(while_schedule)
 
 def btn_cmd():
     
@@ -165,3 +151,26 @@ btn = Button(temp, text="데이터 전송", command=btn_cmd)
 
 btn.grid(row=4, column=2)
 temp.mainloop()
+
+
+def main():        
+    client = get_influxdb(database_name='ig_test333', host='34.64.88.253', port=8086)
+    client.get_list_database()
+    client.get_list_measurements
+    points = [{'measurement':'temp', 
+        'tags':{'server_id': 'server1'}, 
+        'fields':{'temp': 10 ,'humi': 9},
+        'time': datetime.utcnow().strftime("%Y/%m/%d %H:%M:%S")}] # 한국현재시간
+    client.write_points(points=points, protocol='json')
+    rs = client.query("""
+        SELECT max(v) as cnt_v
+        FROM temp 
+        WHERE time >= now() - 12h GROUP BY time(3h)
+        """)
+    for point in rs.get_points():
+        print(point)
+
+    
+schedule.every(5).seconds.do(main)
+if __name__ == '__main__':
+    main()

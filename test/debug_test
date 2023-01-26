@@ -1,0 +1,7 @@
+def main():
+    i = 1
+    b = 2
+    print(f'i+b={i+b}')
+
+if __name__ == '__main__':
+    main()

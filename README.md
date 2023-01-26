@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 # KBU IOT PROJECT
  
+=======
+>>>>>>> e6152d1b029201cc86e15915d70828ebf802093a
 ---
 __Advertisement :)__
 
